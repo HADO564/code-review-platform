@@ -7,6 +7,8 @@ require (
 	github.com/vektah/gqlparser/v2 v2.5.16
 )
 
+require github.com/joho/godotenv v1.5.1 // indirect
+
 require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
