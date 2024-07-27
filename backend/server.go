@@ -1,13 +1,13 @@
 package main
 
 import (
+	"backend/graph"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/yourusername/code-review-platform/graph"
 )
 
 const defaultPort = "8080"

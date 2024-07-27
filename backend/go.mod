@@ -1,4 +1,4 @@
-module github.com/yourusername/code-review-platform
+module backend
 
 go 1.22.5
 
