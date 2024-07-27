@@ -11,14 +11,64 @@ import (
 	"github.com/yourusername/code-review-platform/graph/model"
 )
 
-// CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
+// CreateUser is the resolver for the createUser field.
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
+	panic(fmt.Errorf("not implemented: CreateUser - createUser"))
 }
 
-// Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: Todos - todos"))
+// CreateProject is the resolver for the createProject field.
+func (r *mutationResolver) CreateProject(ctx context.Context, input model.NewProject) (*model.Project, error) {
+	panic(fmt.Errorf("not implemented: CreateProject - createProject"))
+}
+
+// CreateCodeSnippet is the resolver for the createCodeSnippet field.
+func (r *mutationResolver) CreateCodeSnippet(ctx context.Context, input model.NewCodeSnippet) (*model.CodeSnippet, error) {
+	panic(fmt.Errorf("not implemented: CreateCodeSnippet - createCodeSnippet"))
+}
+
+// CreateReview is the resolver for the createReview field.
+func (r *mutationResolver) CreateReview(ctx context.Context, input model.NewReview) (*model.Review, error) {
+	panic(fmt.Errorf("not implemented: CreateReview - createReview"))
+}
+
+// CreateComment is the resolver for the createComment field.
+func (r *mutationResolver) CreateComment(ctx context.Context, input model.NewComment) (*model.Comment, error) {
+	panic(fmt.Errorf("not implemented: CreateComment - createComment"))
+}
+
+// AddProjectCollaborator is the resolver for the addProjectCollaborator field.
+func (r *mutationResolver) AddProjectCollaborator(ctx context.Context, input model.NewProjectCollaborator) (*model.ProjectCollaborator, error) {
+	panic(fmt.Errorf("not implemented: AddProjectCollaborator - addProjectCollaborator"))
+}
+
+// User is the resolver for the user field.
+func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
+	panic(fmt.Errorf("not implemented: User - user"))
+}
+
+// Project is the resolver for the project field.
+func (r *queryResolver) Project(ctx context.Context, id string) (*model.Project, error) {
+	panic(fmt.Errorf("not implemented: Project - project"))
+}
+
+// CodeSnippet is the resolver for the codeSnippet field.
+func (r *queryResolver) CodeSnippet(ctx context.Context, id string) (*model.CodeSnippet, error) {
+	panic(fmt.Errorf("not implemented: CodeSnippet - codeSnippet"))
+}
+
+// Review is the resolver for the review field.
+func (r *queryResolver) Review(ctx context.Context, id string) (*model.Review, error) {
+	panic(fmt.Errorf("not implemented: Review - review"))
+}
+
+// Comment is the resolver for the comment field.
+func (r *queryResolver) Comment(ctx context.Context, id string) (*model.Comment, error) {
+	panic(fmt.Errorf("not implemented: Comment - comment"))
+}
+
+// ProjectCollaborator is the resolver for the projectCollaborator field.
+func (r *queryResolver) ProjectCollaborator(ctx context.Context, projectID string, userID string) (*model.ProjectCollaborator, error) {
+	panic(fmt.Errorf("not implemented: ProjectCollaborator - projectCollaborator"))
 }
 
 // Mutation returns MutationResolver implementation.
@@ -29,3 +79,5 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+
+
