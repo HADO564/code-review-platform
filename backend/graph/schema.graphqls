@@ -2,27 +2,141 @@
 #
 # https://gqlgen.com/getting-started/
 
-type Todo {
-  id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
-}
+# GraphQL Types
 
 type User {
-  id: ID!
-  name: String!
+    id: ID!
+    username: String!
+    email: String!
+    createdAt: String! # Use ISO-8601 format for date-time
+    updatedAt: String! # Use ISO-8601 format for date-time
+    projects: [Project!]!
+    reviews: [Review!]!
 }
 
-type Query {
-  todos: [Todo!]!
+type Project {
+    id: ID!
+    name: String!
+    description: String
+    owner: User
+    codeSnippets: [CodeSnippet!]!
+    collaborators: [ProjectCollaborator!]!
+    createdAt: String! # Use ISO-8601 format for date-time
+    updatedAt: String! # Use ISO-8601 format for date-time
 }
 
-input NewTodo {
-  text: String!
-  userId: String!
+type CodeSnippet {
+    id: ID!
+    project: Project
+    title: String!
+    content: String!
+    language: String!
+    version: Int!
+    createdBy: User
+    reviews: [Review!]!
+    createdAt: String! # Use ISO-8601 format for date-time
+    updatedAt: String! # Use ISO-8601 format for date-time
 }
+
+type Review {
+    id: ID!
+    snippet: CodeSnippet
+    reviewer: User
+    status: ReviewStatus!
+    comments: [Comment!]!
+    createdAt: String! # Use ISO-8601 format for date-time
+    updatedAt: String! # Use ISO-8601 format for date-time
+}
+
+type Comment {
+    id: ID!
+    review: Review
+    user: User
+    content: String!
+    lineNumber: Int
+    createdAt: String! # Use ISO-8601 format for date-time
+    updatedAt: String! # Use ISO-8601 format for date-time
+}
+
+type ProjectCollaborator {
+    project: Project
+    user: User
+    role: CollaboratorRole!
+}
+
+# Enums
+
+enum ReviewStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+enum CollaboratorRole {
+    OWNER
+    CONTRIBUTOR
+    VIEWER
+}
+
+# Input Types
+
+input NewUser {
+    username: String!
+    email: String!
+    password: String!
+}
+
+input NewProject {
+    name: String!
+    description: String
+    ownerId: ID!
+}
+
+input NewCodeSnippet {
+    projectId: ID!
+    title: String!
+    content: String!
+    language: String!
+    createdById: ID!
+}
+
+input NewReview {
+    snippetId: ID!
+    reviewerId: ID!
+}
+
+input NewComment {
+    reviewId: ID!
+    userId: ID!
+    content: String!
+    lineNumber: Int
+}
+
+input NewProjectCollaborator {
+    projectId: ID!
+    userId: ID!
+    role: CollaboratorRole!
+}
+
+# Mutation Type
 
 type Mutation {
-  createTodo(input: NewTodo!): Todo!
+    createUser(input: NewUser!): User!
+    createProject(input: NewProject!): Project!
+    createCodeSnippet(input: NewCodeSnippet!): CodeSnippet!
+    createReview(input: NewReview!): Review!
+    createComment(input: NewComment!): Comment!
+    addProjectCollaborator(input: NewProjectCollaborator!): ProjectCollaborator!
 }
+
+# Query Type
+
+type Query {
+    user(id: ID!): User
+    project(id: ID!): Project
+    codeSnippet(id: ID!): CodeSnippet
+    review(id: ID!): Review
+    comment(id: ID!): Comment
+    projectCollaborator(projectId: ID!, userId: ID!): ProjectCollaborator
+}
+

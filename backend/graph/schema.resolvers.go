@@ -7,28 +7,254 @@ package graph
 import (
 	"backend/graph/model"
 	"context"
+	"fmt"
+	"github.com/google/uuid"
+	"time"
 )
 
-var TodoList []*model.Todo
-
-// CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	todo:=&model.Todo{
-		ID: "ey3213",
-		Text: input.Text,
-		Done: false,
-		User: &model.User{
-			ID: input.UserID,
-			Name: "Alyan",
-		},
+// CreateUser is the resolver for the createUser field.
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
+	newuser := &model.User{
+		ID: uuid.New().String(),
+		Username: input.Username,
+		Email: input.Email,
+		CreatedAt: time.Now().String(), 
+		UpdatedAt: time.Now().String(),
+		Projects: []*model.Project{},
+		Reviews: []*model.Review{},
 	}
-	TodoList = append(TodoList, todo)
-	return todo,nil
+
+	r.users = append(r.users, newuser)
+	return newuser, nil
 }
 
-// Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	return TodoList, nil
+// CreateProject is the resolver for the createProject field.
+func (r *mutationResolver) CreateProject(ctx context.Context, input model.NewProject) (*model.Project, error) {
+	var myuser *model.User
+	for _, user := range r.users {
+		if user.ID == input.OwnerID {
+			myuser = user
+		}
+	}
+	if myuser == nil {
+		return nil, fmt.Errorf("User not found")
+	}		
+	
+	newproj := &model.Project{
+		ID: uuid.New().String(),     
+		Name: input.Name,         
+		Description: input.Description,   
+		Owner: myuser,       
+		CodeSnippets: []*model.CodeSnippet{},  
+		Collaborators: []*model.ProjectCollaborator{},
+		CreatedAt: time.Now().String(),
+		UpdatedAt: time.Now().String(),
+	}
+
+	r.projects = append(r.projects, newproj)
+	return newproj, nil
+}
+
+// CreateCodeSnippet is the resolver for the createCodeSnippet field.
+func (r *mutationResolver) CreateCodeSnippet(ctx context.Context, input model.NewCodeSnippet) (*model.CodeSnippet, error) {
+	var myuser *model.User
+	for _, user := range r.users {
+		if user.ID == input.CreatedByID {
+			myuser = user
+		}
+	}
+	if myuser == nil {
+		return nil, fmt.Errorf("User not found")
+	}
+
+	var myproj *model.Project
+	for _, proj := range r.projects {
+		if proj.ID == input.ProjectID {
+			myproj = proj
+		}
+	}
+	if myproj == nil {
+		return nil, fmt.Errorf("Project not found")
+	}
+	
+	newsnippet := &model.CodeSnippet{
+		ID: uuid.New().String(),
+		Project: myproj,	
+		Title: input.Title,
+		Content: input.Content,
+		Language: input.Language,
+		Version: 1,
+		CreatedBy: myuser,
+		Reviews: []*model.Review{},
+		CreatedAt: time.Now().String(),
+		UpdatedAt: time.Now().String(),
+	}
+
+	r.codeSnippets = append(r.codeSnippets, newsnippet)
+	return newsnippet, nil
+}
+
+// CreateReview is the resolver for the createReview field.
+func (r *mutationResolver) CreateReview(ctx context.Context, input model.NewReview) (*model.Review, error) {
+	var myuser *model.User
+	for _, user := range r.users {
+		if user.ID == input.ReviewerID {
+			myuser = user
+		}
+	}
+	if myuser == nil {
+		return nil, fmt.Errorf("User not found")
+	}
+
+	var mysnippet *model.CodeSnippet
+	for _, snippet := range r.codeSnippets {
+		if snippet.ID == input.SnippetID {
+			mysnippet = snippet
+		}
+	}
+	if mysnippet == nil {
+		return nil, fmt.Errorf("CodeSnippet not found")
+	}
+	
+	newreview := &model.Review{
+		ID: uuid.New().String(),
+		Snippet: mysnippet,
+		Reviewer: myuser,
+		Comments: []*model.Comment{},
+		CreatedAt: time.Now().String(),
+		UpdatedAt: time.Now().String(),
+	}
+
+	r.reviews = append(r.reviews, newreview)
+	return newreview, nil
+}
+
+// CreateComment is the resolver for the createComment field.
+func (r *mutationResolver) CreateComment(ctx context.Context, input model.NewComment) (*model.Comment, error) {
+	var myuser *model.User
+	for _, user := range r.users {
+		if user.ID == input.UserID {
+			myuser = user
+		}
+	}
+	if myuser == nil {
+		return nil, fmt.Errorf("User not found")
+	}
+	
+	var myreview *model.Review
+	for _, review := range r.reviews {
+		if review.ID == input.ReviewID {
+			myreview = review
+		}
+	}
+	if myreview == nil {
+		return nil, fmt.Errorf("Review not found")
+	}
+	
+	newcomment := &model.Comment{
+		ID: uuid.New().String(),
+		Review: myreview,
+		User: myuser,
+		Content: input.Content,
+		LineNumber: input.LineNumber,
+		CreatedAt: time.Now().String(),
+		UpdatedAt: time.Now().String(),
+	}
+
+	r.comments = append(r.comments, newcomment)
+	return newcomment, nil
+}
+
+// AddProjectCollaborator is the resolver for the addProjectCollaborator field.
+func (r *mutationResolver) AddProjectCollaborator(ctx context.Context, input model.NewProjectCollaborator) (*model.ProjectCollaborator, error) {
+	var myuser *model.User
+	for _, user := range r.users {
+		if user.ID == input.UserID {
+			myuser = user
+		}
+	}
+	if myuser == nil {
+		return nil, fmt.Errorf("User not found")
+	}
+
+	var myproj *model.Project
+	for _, proj := range r.projects {
+		if proj.ID == input.ProjectID {
+			myproj = proj
+		}
+	}
+	if myproj == nil {
+		return nil, fmt.Errorf("Project not found")
+	}
+	
+	newcollab := &model.ProjectCollaborator{
+		Project: myproj,
+		User: myuser,
+		Role: input.Role,
+	}
+
+	r.collabs = append(r.collabs, newcollab)
+	return newcollab, nil
+}
+
+// User is the resolver for the user field.
+func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
+	for _, user := range r.users {
+		if user.ID == id {
+			return user, nil
+		}
+	}
+	return nil, fmt.Errorf("User not found")
+}
+
+// Project is the resolver for the project field.
+func (r *queryResolver) Project(ctx context.Context, id string) (*model.Project, error) {
+	for _, proj := range r.projects {
+		if proj.ID == id {
+			return proj, nil
+		}
+	}
+	return nil, fmt.Errorf("Project not found")
+}
+
+// CodeSnippet is the resolver for the codeSnippet field.
+func (r *queryResolver) CodeSnippet(ctx context.Context, id string) (*model.CodeSnippet, error) {
+	for _, snippet := range r.codeSnippets {
+		if snippet.ID == id {
+			return snippet, nil
+		}
+	}
+	return nil, fmt.Errorf("CodeSnippet not found")
+}
+
+// Review is the resolver for the review field.
+func (r *queryResolver) Review(ctx context.Context, id string) (*model.Review, error) {
+	for _, review := range r.reviews {
+		if review.ID == id {
+			return review, nil
+		}
+	}
+	return nil, fmt.Errorf("Review not found")
+}
+
+// Comment is the resolver for the comment field.
+func (r *queryResolver) Comment(ctx context.Context, id string) (*model.Comment, error) {
+	for _, comment := range r.comments {
+		if comment.ID == id {
+			return comment, nil
+		}
+	}
+	return nil, fmt.Errorf("Comment not found")
+}
+
+// ProjectCollaborator is the resolver for the projectCollaborator field.
+func (r *queryResolver) ProjectCollaborator(ctx context.Context, projectID string, userID string) (*model.ProjectCollaborator, error) {
+	for _, collab := range r.collabs {
+		if collab.Project.ID == projectID && collab.User.ID == userID {
+			return collab, nil
+		}
+	}
+	return nil, fmt.Errorf("ProjectCollaborator not found")
 }
 
 // Mutation returns MutationResolver implementation.
@@ -39,3 +265,10 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//     it when you're done.
+//   - You have helper methods in this file. Move them out to keep these resolver files clean.
