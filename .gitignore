@@ -5,10 +5,12 @@
 *.dll
 *.so
 *.dylib
+*.env.local
 
 # Svelte
 /frontend/node_modules
 /frontend/public/build
+/frontend/.env.local
 
 # IDEs and editors
 .vscode
