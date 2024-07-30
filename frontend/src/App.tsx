@@ -2,15 +2,11 @@ function App() {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const query = `
-    mutation {
-      createUser(input: {
-        username: "DaGoat"
-        password: "jsadhsakjdhas"
-        email: "alyan@gmail.com"
-      }) {
+    query {
+      user(id: "d024b95c-2fd1-40d1-bdca-0eb3aff31b1d"){
         id
-        email
         username
+        email
       }
     }
   `;
@@ -20,9 +16,15 @@ function App() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + 'd024b95c-2fd1-40d1-bdca-0eb3aff31b1d'
       },
       body: JSON.stringify({ query }),
     });
+
+    if (!response.ok) {
+      console.log(response.status)
+      return
+    }
     const { data } = await response.json();
     console.log(data);
   }
