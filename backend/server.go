@@ -4,7 +4,6 @@ import (
     "log"
     "net/http"
     "os"
-
     "github.com/99designs/gqlgen/graphql/handler"
     "github.com/99designs/gqlgen/graphql/playground"
     "github.com/joho/godotenv"
@@ -21,11 +20,16 @@ func main() {
         log.Println("Warning: Error loading .env file")
     }
 
+    // Log the environment variables for debugging
+    log.Println("SUPABASE_PUBLIC_URL:", os.Getenv("SUPABASE_PUBLIC_URL"))
+    log.Println("SUPABASE_PUBLIC_API_KEY:", os.Getenv("SUPABASE_PUBLIC_API_KEY"))
+
     // Initialize Supabase client
     err = supabase.Init()
     if err != nil {
         log.Fatalf("Failed to initialize Supabase client: %v", err)
     }
+    log.Println("Supabase connection established successfully")
 
     port := os.Getenv("PORT")
     if port == "" {
