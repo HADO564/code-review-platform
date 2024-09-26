@@ -1,28 +1,17 @@
 package pkg
 
 import (
-    "database/sql"
     "encoding/json"
     "fmt"
     "net/http"
 
     _ "github.com/lib/pq"
 	"github.com/yourusername/code-review-platform/graph/model"
-	"github.com/yourusername/code-review-platform/db"
 )
 
 // Connect to the database
-func connectDB() (*sql.DB, error) {
-    connStr := "postgres://username:password@localhost/dbname?sslmode=disable"
-    db, err := sql.Open("postgres", connStr)
-    if err != nil {
-        return nil, fmt.Errorf("failed to connect to the database: %v", err)
-    }
-    return db, nil
-}
-
 // Create user route
-func createUserHandler(db *sql.DB) http.HandlerFunc {
+func createUserHandler() http.HandlerFunc {
     return func(w http.ResponseWriter, r *http.Request) {
         var input model.NewUser
 
@@ -34,24 +23,24 @@ func createUserHandler(db *sql.DB) http.HandlerFunc {
         }
 
         // Create the new user using the functions package
-        newUser := &model.User{
+        newUser := &model.NewUser{
             Username: input.Username,
             Email:    input.Email,
         }
 
-        err = functions.CreateUser(r.Context(), db, newUser)
+        user,err := CreateUser(r.Context(), newUser)
         if err != nil {
             http.Error(w, fmt.Sprintf("Error creating user: %v", err), http.StatusInternalServerError)
             return
         }
 
         // Respond with the created user in JSON format
-        json.NewEncoder(w).Encode(newUser)
+        json.NewEncoder(w).Encode(user)
     }
 }
 
 // Get user by email route
-func getUserByEmailHandler(db *sql.DB) http.HandlerFunc {
+func getUserByEmailHandler() http.HandlerFunc {
     return func(w http.ResponseWriter, r *http.Request) {
         email := r.URL.Query().Get("email")
         if email == "" {
@@ -59,7 +48,7 @@ func getUserByEmailHandler(db *sql.DB) http.HandlerFunc {
             return
         }
 
-        user, err := functions.GetUserByEmail(r.Context(), db, email)
+        user, err := GetUserByEmail(r.Context(), email)
         if err != nil {
             http.Error(w, fmt.Sprintf("Error fetching user: %v", err), http.StatusInternalServerError)
             return
