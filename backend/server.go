@@ -11,11 +11,11 @@ import (
     "github.com/yourusername/code-review-platform/internal/supabase"
 )
 
-const defaultPort = "8080"
+const defaultPort = "4000"
 
 func main() {
     // Load the .env file
-    err := godotenv.Load()
+    err := godotenv.Load(".env.local")
     if err != nil {
         log.Println("Warning: Error loading .env file")
     }
