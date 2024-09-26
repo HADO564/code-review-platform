@@ -1,4 +1,4 @@
-package functions_graph
+package pkg
 
 import (
     "context"

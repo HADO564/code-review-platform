@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	"github.com/yourusername/code-review-platform/graph/model"
+	"github.com/yourusername/code-review-platform/db"
 )
 
 // CreateUser is the resolver for the createUser field.

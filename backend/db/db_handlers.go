@@ -1,4 +1,4 @@
-package db_handlers
+package pkg
 
 import (
     "database/sql"
@@ -8,7 +8,7 @@ import (
 
     _ "github.com/lib/pq"
 	"github.com/yourusername/code-review-platform/graph/model"
-	"github.com/yourusername/code-review-platform/graph/"
+	"github.com/yourusername/code-review-platform/db"
 )
 
 // Connect to the database
