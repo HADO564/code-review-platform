@@ -11,7 +11,7 @@ import (
     "github.com/yourusername/code-review-platform/internal/supabase"
 )
 
-const defaultPort = "4000"
+const defaultPort = "5000"
 
 func main() {
     // Load the .env file

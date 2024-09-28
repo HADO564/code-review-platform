@@ -3,8 +3,10 @@ package pkg
 // Insert the new user into the database
 import (
 	"context"
-	"fmt"
 	"encoding/json"
+	"fmt"
+	"log"
+
 	"github.com/yourusername/code-review-platform/graph/model"
 	"github.com/yourusername/code-review-platform/internal/supabase"
 )
@@ -52,12 +54,23 @@ func GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
 	if count == 0 {
 		return nil, fmt.Errorf("user not found")
 	}
-
+	
 	// Unmarshal the response data into the user struct
 	err = json.Unmarshal(responseBytes, &user)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal user data: %w", err)
 	}
 
+	// Now that user is populated, marshal it to JSON for printing
+	jsonData, err := json.MarshalIndent(user, "", "  ")
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal user data to JSON: %w", err)
+	}
+	
+	// Print the JSON data
+	fmt.Println(string(jsonData))
+
+	// Log the createdAt and updatedAt fields
+	log.Printf("User createdAt: %s, updatedAt: %s", user.CreatedAt, user.UpdatedAt)
 	return &user, nil
 }

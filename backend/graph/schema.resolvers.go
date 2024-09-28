@@ -82,8 +82,6 @@ func (r *queryResolver) ProjectCollaborator(ctx context.Context, projectID strin
 	panic(fmt.Errorf("not implemented: ProjectCollaborator - projectCollaborator"))
 }
 
-
-
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 

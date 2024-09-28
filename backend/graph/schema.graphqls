@@ -4,8 +4,8 @@ type User {
     id: ID!
     username: String!
     email: String!
-    createdAt: String! # Use ISO-8601 format for date-time
-    updatedAt: String! # Use ISO-8601 format for date-time
+    created_at: String! # Use ISO-8601 format for date-time
+    updated_at: String! # Use ISO-8601 format for date-time
     projects: [Project!]!
     reviews: [Review!]!
 }
