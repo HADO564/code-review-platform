@@ -20,9 +20,6 @@ func main() {
         log.Println("Warning: Error loading .env file")
     }
 
-    // Log the environment variables for debugging
-    log.Println("SUPABASE_PUBLIC_URL:", os.Getenv("SUPABASE_PUBLIC_URL"))
-    log.Println("SUPABASE_PUBLIC_API_KEY:", os.Getenv("SUPABASE_PUBLIC_API_KEY"))
 
     // Initialize Supabase client
     err = supabase.Init()
