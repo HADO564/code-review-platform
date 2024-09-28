@@ -127,6 +127,7 @@ type Mutation {
 # Query Type
 
 type Query {
+    getUserByEmail(email: String!): User
     user(id: ID!): User
     project(id: ID!): Project
     codeSnippet(id: ID!): CodeSnippet
