@@ -101,6 +101,10 @@ type Review struct {
 	UpdatedAt string       `json:"updatedAt"`
 }
 
+type UpdatedUser struct {
+	Username string `json:"username"`
+}
+
 type User struct {
 	ID        string     `json:"id"`
 	Username  string     `json:"username"`

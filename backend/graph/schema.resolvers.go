@@ -47,6 +47,15 @@ func (r *mutationResolver) AddProjectCollaborator(ctx context.Context, input mod
 	panic(fmt.Errorf("not implemented: AddProjectCollaborator - addProjectCollaborator"))
 }
 
+// UpdateUser is the resolver for the updateUser field.
+func (r *mutationResolver) UpdateUser(ctx context.Context, input model.UpdatedUser) (*model.User, error) {
+	updated_user,err:= pkg.UpdateUser(ctx, &input)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create user: %v", err)
+	}
+	return updated_user,nil
+}
+
 // GetUserByEmail is the resolver for the getUserByEmail field.
 func (r *queryResolver) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
 	return pkg.GetUserByEmail(ctx, email)
@@ -90,3 +99,15 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+/*
+	func (r *queryResolver) UpdateUser(ctx context.Context, email string) (*model.User, error) {
+	panic(fmt.Errorf("not implemented: UpdateUser - updateUser"))
+}
+*/

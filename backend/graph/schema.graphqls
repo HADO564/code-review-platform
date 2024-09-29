@@ -87,6 +87,10 @@ input NewProject {
     ownerId: ID!
 }
 
+input UpdatedUser{
+    username:String!
+}
+
 input NewCodeSnippet {
     projectId: ID!
     title: String!
@@ -122,6 +126,7 @@ type Mutation {
     createReview(input: NewReview!): Review!
     createComment(input: NewComment!): Comment!
     addProjectCollaborator(input: NewProjectCollaborator!): ProjectCollaborator!
+    updateUser(input: UpdatedUser!): User!
 }
 
 # Query Type
