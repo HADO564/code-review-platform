@@ -77,6 +77,7 @@ type ComplexityRoot struct {
 		CreateProject          func(childComplexity int, input model.NewProject) int
 		CreateReview           func(childComplexity int, input model.NewReview) int
 		CreateUser             func(childComplexity int, input model.NewUser) int
+		DeleteUser             func(childComplexity int, input model.UpdatedUser) int
 		UpdateUser             func(childComplexity int, input model.UpdatedUser) int
 	}
 
@@ -136,6 +137,7 @@ type MutationResolver interface {
 	CreateComment(ctx context.Context, input model.NewComment) (*model.Comment, error)
 	AddProjectCollaborator(ctx context.Context, input model.NewProjectCollaborator) (*model.ProjectCollaborator, error)
 	UpdateUser(ctx context.Context, input model.UpdatedUser) (*model.User, error)
+	DeleteUser(ctx context.Context, input model.UpdatedUser) (*model.User, error)
 }
 type QueryResolver interface {
 	GetUserByEmail(ctx context.Context, email string) (*model.User, error)
@@ -356,6 +358,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateUser(childComplexity, args["input"].(model.NewUser)), true
+
+	case "Mutation.deleteUser":
+		if e.complexity.Mutation.DeleteUser == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteUser_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteUser(childComplexity, args["input"].(model.UpdatedUser)), true
 
 	case "Mutation.updateUser":
 		if e.complexity.Mutation.UpdateUser == nil {
@@ -948,6 +962,38 @@ func (ec *executionContext) field_Mutation_createUser_argsInput(
 	}
 
 	var zeroVal model.NewUser
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	arg0, err := ec.field_Mutation_deleteUser_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_deleteUser_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.UpdatedUser, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal model.UpdatedUser
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNUpdatedUser2githubᚗcomᚋyourusernameᚋcodeᚑreviewᚑplatformᚋgraphᚋmodelᚐUpdatedUser(ctx, tmp)
+	}
+
+	var zeroVal model.UpdatedUser
 	return zeroVal, nil
 }
 
@@ -2644,6 +2690,74 @@ func (ec *executionContext) fieldContext_Mutation_updateUser(ctx context.Context
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateUser_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteUser(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteUser(rctx, fc.Args["input"].(model.UpdatedUser))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚖgithubᚗcomᚋyourusernameᚋcodeᚑreviewᚑplatformᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_User_id(ctx, field)
+			case "username":
+				return ec.fieldContext_User_username(ctx, field)
+			case "email":
+				return ec.fieldContext_User_email(ctx, field)
+			case "created_at":
+				return ec.fieldContext_User_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_User_updated_at(ctx, field)
+			case "projects":
+				return ec.fieldContext_User_projects(ctx, field)
+			case "reviews":
+				return ec.fieldContext_User_reviews(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteUser_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -6772,6 +6886,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "deleteUser":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteUser(ctx, field)
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

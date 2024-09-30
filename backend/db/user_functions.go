@@ -110,3 +110,24 @@ func UpdateUser(ctx context.Context, input *model.UpdatedUser) (*model.User, err
 
 	return &user, nil
 }
+
+func DeleteUser(ctx context.Context, input *model.UpdatedUser)(*model.User, error){
+
+	var deletedUser model.User
+	responseBytes, count, err := supabase.Client.From("users").
+		Delete("", "exact").
+		Eq("username", input.Username).
+		Execute()
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to delete user: %w", err)
+	}
+	if count == 0 {
+		return nil, fmt.Errorf("user not found or not deleted")
+	}	
+	err = json.Unmarshal(responseBytes, &deletedUser)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal user data: %w", err)
+	}
+	return &deletedUser, nil
+}
