@@ -52,7 +52,8 @@ type NewComment struct {
 type NewProject struct {
 	Name        string  `json:"name"`
 	Description *string `json:"description,omitempty"`
-	OwnerID     string  `json:"ownerId"`
+	OwnerID     *string `json:"ownerId,omitempty"`
+	OwnerName   string  `json:"ownerName"`
 }
 
 type NewProjectCollaborator struct {
@@ -62,8 +63,9 @@ type NewProjectCollaborator struct {
 }
 
 type NewReview struct {
-	SnippetID  string `json:"snippetId"`
-	ReviewerID string `json:"reviewerId"`
+	SnippetID  string       `json:"snippetId"`
+	ReviewerID string       `json:"reviewerId"`
+	Status     ReviewStatus `json:"status"`
 }
 
 type NewUser struct {
@@ -76,6 +78,7 @@ type Project struct {
 	Name          string                 `json:"name"`
 	Description   *string                `json:"description,omitempty"`
 	Owner         *User                  `json:"owner,omitempty"`
+	OwnerName     string                 `json:"ownerName"`
 	CodeSnippets  []*CodeSnippet         `json:"codeSnippets"`
 	Collaborators []*ProjectCollaborator `json:"collaborators"`
 	CreatedAt     string                 `json:"createdAt"`
@@ -83,8 +86,8 @@ type Project struct {
 }
 
 type ProjectCollaborator struct {
-	Project *Project         `json:"project,omitempty"`
-	User    *User            `json:"user,omitempty"`
+	Project *Project         `json:"project"`
+	User    *User            `json:"user"`
 	Role    CollaboratorRole `json:"role"`
 }
 
@@ -101,16 +104,23 @@ type Review struct {
 	UpdatedAt string       `json:"updatedAt"`
 }
 
+type UpdatedProject struct {
+	Name        *string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+	OwnerName   *string `json:"owner_name,omitempty"`
+}
+
 type UpdatedUser struct {
 	Username string `json:"username"`
+	Email    string `json:"email"`
 }
 
 type User struct {
 	ID        string     `json:"id"`
 	Username  string     `json:"username"`
 	Email     string     `json:"email"`
-	CreatedAt string     `json:"created_at"`
-	UpdatedAt string     `json:"updated_at"`
+	CreatedAt string     `json:"createdAt"`
+	UpdatedAt string     `json:"updatedAt"`
 	Projects  []*Project `json:"projects"`
 	Reviews   []*Review  `json:"reviews"`
 }

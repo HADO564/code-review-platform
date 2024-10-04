@@ -1,143 +1,152 @@
 # GraphQL Types
-
 type User {
-    id: ID!
-    username: String!
-    email: String!
-    created_at: String! # Use ISO-8601 format for date-time
-    updated_at: String! # Use ISO-8601 format for date-time
-    projects: [Project!]!
-    reviews: [Review!]!
+  id: ID!
+  username: String!
+  email: String!
+  createdAt: String! # Use ISO-8601 format for date-time
+  updatedAt: String! # Use ISO-8601 format for date-time
+  projects: [Project!]!
+  reviews: [Review!]!
 }
 
 type Project {
-    id: ID!
-    name: String!
-    description: String
-    owner: User
-    codeSnippets: [CodeSnippet!]!
-    collaborators: [ProjectCollaborator!]!
-    createdAt: String! # Use ISO-8601 format for date-time
-    updatedAt: String! # Use ISO-8601 format for date-time
+  id: ID!
+  name: String!
+  description: String
+  owner: User
+  ownerName: String! # Added to match owner_name in database
+  codeSnippets: [CodeSnippet!]!
+  collaborators: [ProjectCollaborator!]!
+  createdAt: String! # Use ISO-8601 format for date-time
+  updatedAt: String! # Use ISO-8601 format for date-time
 }
 
 type CodeSnippet {
-    id: ID!
-    project: Project
-    title: String!
-    content: String!
-    language: String!
-    version: Int!
-    createdBy: User
-    reviews: [Review!]!
-    createdAt: String! # Use ISO-8601 format for date-time
-    updatedAt: String! # Use ISO-8601 format for date-time
+  id: ID!
+  project: Project
+  title: String!
+  content: String!
+  language: String!
+  version: Int!
+  createdBy: User
+  reviews: [Review!]!
+  createdAt: String! # Use ISO-8601 format for date-time
+  updatedAt: String! # Use ISO-8601 format for date-time
 }
 
 type Review {
-    id: ID!
-    snippet: CodeSnippet
-    reviewer: User
-    status: ReviewStatus!
-    comments: [Comment!]!
-    createdAt: String! # Use ISO-8601 format for date-time
-    updatedAt: String! # Use ISO-8601 format for date-time
+  id: ID!
+  snippet: CodeSnippet
+  reviewer: User
+  status: ReviewStatus!
+  comments: [Comment!]!
+  createdAt: String! # Use ISO-8601 format for date-time
+  updatedAt: String! # Use ISO-8601 format for date-time
 }
 
 type Comment {
-    id: ID!
-    review: Review
-    user: User
-    content: String!
-    lineNumber: Int
-    createdAt: String! # Use ISO-8601 format for date-time
-    updatedAt: String! # Use ISO-8601 format for date-time
+  id: ID!
+  review: Review
+  user: User
+  content: String!
+  lineNumber: Int
+  createdAt: String! # Use ISO-8601 format for date-time
+  updatedAt: String! # Use ISO-8601 format for date-time
 }
 
 type ProjectCollaborator {
-    project: Project
-    user: User
-    role: CollaboratorRole!
+  project: Project!
+  user: User!
+  role: CollaboratorRole!
 }
 
 # Enums
-
 enum ReviewStatus {
-    PENDING
-    APPROVED
-    REJECTED
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum CollaboratorRole {
-    OWNER
-    CONTRIBUTOR
-    VIEWER
+  OWNER
+  CONTRIBUTOR
+  VIEWER
 }
 
 # Input Types
-
 input NewUser {
-    username: String!
-    email: String!
+  username: String!
+  email: String!
 }
 
 input NewProject {
-    name: String!
-    description: String
-    ownerId: ID!
+  name: String!
+  description: String
+  ownerId: ID
+  ownerName: String! # Added to match owner_name in database
 }
 
-input UpdatedUser{
-    username:String!
+input UpdatedUser {
+  username: String!
+  email: String!
 }
 
 input NewCodeSnippet {
-    projectId: ID!
-    title: String!
-    content: String!
-    language: String!
-    createdById: ID!
+  projectId: ID!
+  title: String!
+  content: String!
+  language: String!
+  createdById: ID!
 }
 
 input NewReview {
-    snippetId: ID!
-    reviewerId: ID!
+  snippetId: ID!
+  reviewerId: ID!
+  status: ReviewStatus!
 }
 
 input NewComment {
-    reviewId: ID!
-    userId: ID!
-    content: String!
-    lineNumber: Int
+  reviewId: ID!
+  userId: ID!
+  content: String!
+  lineNumber: Int
 }
 
 input NewProjectCollaborator {
-    projectId: ID!
-    userId: ID!
-    role: CollaboratorRole!
+  projectId: ID!
+  userId: ID!
+  role: CollaboratorRole!
+}
+
+input UpdatedProject {
+  name: String
+  description: String
+  owner_name: String
 }
 
 # Mutation Type
-
 type Mutation {
-    createUser(input: NewUser!): User!
-    createProject(input: NewProject!): Project!
-    createCodeSnippet(input: NewCodeSnippet!): CodeSnippet!
-    createReview(input: NewReview!): Review!
-    createComment(input: NewComment!): Comment!
-    addProjectCollaborator(input: NewProjectCollaborator!): ProjectCollaborator!
-    updateUser(input: UpdatedUser!): User!
-    deleteUser(input: UpdatedUser!): User
+  createUser(input: NewUser!): User!
+  createProject(input: NewProject!): Project!
+  createCodeSnippet(input: NewCodeSnippet!): CodeSnippet!
+  createReview(input: NewReview!): Review!
+  createComment(input: NewComment!): Comment!
+  addProjectCollaborator(input: NewProjectCollaborator!): ProjectCollaborator!
+  updateUser(id: ID!, input: UpdatedUser!): User!
+  deleteUser(id: ID!, input: UpdatedUser!): User
+  deleteProject(id: ID!, input: UpdatedProject!): Project
+  updateProject(id: ID!, input: UpdatedProject!): Project
 }
 
 # Query Type
-
 type Query {
-    getUserByEmail(email: String!): User
-    user(id: ID!): User
-    project(id: ID!): Project
-    codeSnippet(id: ID!): CodeSnippet
-    review(id: ID!): Review
-    comment(id: ID!): Comment
-    projectCollaborator(projectId: ID!, userId: ID!): ProjectCollaborator
+  getUserByEmail(email: String!): User
+  getUserByUsername(username: String!): User
+  user(id: ID!): User
+  project(id: ID!): Project
+  projectsByOwnerName(ownerName: String!): [Project!]!
+  codeSnippet(id: ID!): CodeSnippet
+  review(id: ID!): Review
+  comment(id: ID!): Comment
+  projectCollaborator(projectId: ID!, userId: ID!): ProjectCollaborator
 }

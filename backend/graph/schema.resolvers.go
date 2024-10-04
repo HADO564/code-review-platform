@@ -48,7 +48,7 @@ func (r *mutationResolver) AddProjectCollaborator(ctx context.Context, input mod
 }
 
 // UpdateUser is the resolver for the updateUser field.
-func (r *mutationResolver) UpdateUser(ctx context.Context, input model.UpdatedUser) (*model.User, error) {
+func (r *mutationResolver) UpdateUser(ctx context.Context, id string, input model.UpdatedUser) (*model.User, error) {
 	updated_user, err := pkg.UpdateUser(ctx, &input)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create user: %v", err)
@@ -57,7 +57,7 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, input model.UpdatedUs
 }
 
 // DeleteUser is the resolver for the deleteUser field.
-func (r *mutationResolver) DeleteUser(ctx context.Context, input model.UpdatedUser) (*model.User, error) {
+func (r *mutationResolver) DeleteUser(ctx context.Context, id string, input model.UpdatedUser) (*model.User, error) {
 	deletedUser, err := pkg.DeleteUser(ctx, &input)
 	if err != nil {
 		return nil, fmt.Errorf("failed to delete user: %v", err)
@@ -65,9 +65,24 @@ func (r *mutationResolver) DeleteUser(ctx context.Context, input model.UpdatedUs
 	return deletedUser, nil
 }
 
+// DeleteProject is the resolver for the deleteProject field.
+func (r *mutationResolver) DeleteProject(ctx context.Context, id string, input model.UpdatedProject) (*model.Project, error) {
+	panic(fmt.Errorf("not implemented: DeleteProject - deleteProject"))
+}
+
+// UpdateProject is the resolver for the updateProject field.
+func (r *mutationResolver) UpdateProject(ctx context.Context, id string, input model.UpdatedProject) (*model.Project, error) {
+	panic(fmt.Errorf("not implemented: UpdateProject - updateProject"))
+}
+
 // GetUserByEmail is the resolver for the getUserByEmail field.
 func (r *queryResolver) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
 	return pkg.GetUserByEmail(ctx, email)
+}
+
+// GetUserByUsername is the resolver for the getUserByUsername field.
+func (r *queryResolver) GetUserByUsername(ctx context.Context, username string) (*model.User, error) {
+	panic(fmt.Errorf("not implemented: GetUserByUsername - getUserByUsername"))
 }
 
 // User is the resolver for the user field.
@@ -78,6 +93,11 @@ func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error
 // Project is the resolver for the project field.
 func (r *queryResolver) Project(ctx context.Context, id string) (*model.Project, error) {
 	panic(fmt.Errorf("not implemented: Project - project"))
+}
+
+// ProjectsByOwnerName is the resolver for the projectsByOwnerName field.
+func (r *queryResolver) ProjectsByOwnerName(ctx context.Context, ownerName string) ([]*model.Project, error) {
+	panic(fmt.Errorf("not implemented: ProjectsByOwnerName - projectsByOwnerName"))
 }
 
 // CodeSnippet is the resolver for the codeSnippet field.
