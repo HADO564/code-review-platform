@@ -12,6 +12,7 @@ This was not an easy decision, but after careful consideration I believe it is t
 - **Lack of recognition:** Despite the level of effort and hours invested, this work has not felt rewarding — the contributions I've made have gone largely unacknowledged, both professionally and in terms of growth opportunities.
 - **Compensation:** My current pay does not reflect the responsibilities I carry or the market value of the role, and repeated attempts to address this have not led to meaningful change.
 - **Misalignment on vision:** Over time, it's become clear that my perspective on the direction of the company and product no longer aligns with yours. This divergence makes it difficult for me to continue contributing effectively or with full conviction.
+- **Career direction:** I've also come to realize that my long-term interests lie outside backend development. I'm looking to transition into embedded systems and hardware engineering, and pursuing that path requires a level of focus and reskilling that isn't compatible with continuing in my current role.
 
 I'm grateful for the opportunities I've had here and for the people I've worked alongside. I'll do everything I can to ensure a smooth transition over the coming weeks, including documenting my work and helping identify or train a replacement.
 
